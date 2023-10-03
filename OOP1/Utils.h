@@ -11,7 +11,7 @@ struct Vector2 {
 	float y;
 
 	Vector2(float x, float y) : x(x), y(y) {}
-
+	Vector2(int x, int y) : x((float)x), y((float)y) {}
 	float sqrMagnitude() const { return x * x + y * y; }
 	float magnitude() const { return sqrt(sqrMagnitude()); }
 	bool  equalApproximately(const Vector2& other) const { return distance(other) < 0.5f; }
@@ -30,6 +30,7 @@ struct Vector2 {
 	{
 		return Vector2{ x + other.x,y + other.y };
 	}
+
 
 	//Vector2 operator+ (Dimension& other);
 	
@@ -89,7 +90,7 @@ public:
 
 class Debug {
 	static int nDebugLine;
-	static char whiteSpaces[120];
+	static char whiteSpaces[80];
 
 public:
 	static void Log(const char* fmt, ...);

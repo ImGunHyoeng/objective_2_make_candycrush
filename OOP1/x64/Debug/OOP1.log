@@ -1,2 +1,14 @@
-﻿  main.cpp
-  OOP1.vcxproj -> C:\Users\ynoe3\OneDrive\Desktop\객체 2\My_pratice\2d_Shoot_effect_yes\OOP1_with_Collidable\x64\Debug\OOP1.exe
+﻿  BlinkablePlayer.cpp
+  Bullet.cpp
+  Canvas.cpp
+  Enemy.cpp
+  GameObject.cpp
+  ICollidable.cpp
+  InputManager.cpp
+  main.cpp
+  NumberCard.cpp
+  ParticleBullet.cpp
+  Player.cpp
+  Utils.cpp
+  코드를 생성하고 있습니다...
+  OOP1.vcxproj -> C:\Users\GUNHYEONG\Desktop\objective_2\objective_2_make_candycrush\x64\Debug\OOP1.exe

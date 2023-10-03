@@ -147,6 +147,7 @@
     <ClCompile Include="ICollidable.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="NumberCard.cpp" />
     <ClCompile Include="ParticleBullet.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Utils.cpp" />
@@ -159,6 +160,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="ICollidable.h" />
     <ClInclude Include="InputManager.h" />
+    <ClInclude Include="NumberCard.h" />
     <ClInclude Include="ParticleBullet.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Utils.h" />

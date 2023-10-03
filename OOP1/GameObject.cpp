@@ -7,10 +7,11 @@
 #include "Enemy.h"
 #include "Bullet.h"
 #include "InputManager.h"
+#include "NumberCard.h"
 
 
-Canvas GameObject::canvas(80, 20);
-int GameObject::max_objs = 50;
+Canvas GameObject::canvas(45, 49);
+int GameObject::max_objs = 63;
 GameObject** GameObject::objs = new GameObject * [GameObject::max_objs];
 
 void GameObject::draw() { if (alive == true) canvas.draw(shape, position, dimension, visible); }
@@ -23,16 +24,31 @@ void GameObject::Initialize()
 		objs[i] = nullptr;
 
 	auto dim = canvas.getDimension();
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 7; i++)
 	{	
-		switch (rand() % 2)
+		for (int j = 0; j < 9; j++)
 		{
-		case 0:
-			GameObject::Add(new BlinkablePlayer("########  ##########    ##    ", Vector2{ (float)(rand() % dim.x), (float)(rand() % dim.y) }, Dimension{ 6, 5 }, true));
-			break;
-		case 1:
-			GameObject::Add(new Enemy("\xb2\xb2\xb2\xb2\xb2   \xb2\xb2\xb2\xb2\xb2   \xb2\xb2\xb2\xb2", Vector2{ (float)(rand() % dim.x), (float)(rand() % dim.y) }, Dimension{ 4, 5 }, true) );
-			break;
+			static Vector2 temp = Vector2{ 0,0 };
+			temp = { j * 5,i * 7 };
+			switch (rand() % 5)
+			{
+				
+			case 0:
+				GameObject::Add(new NumberCard("     #    #    #    #    #         ", temp, Dimension{ 5, 7 }, true, 1));
+				break;
+			case 1:
+				GameObject::Add(new NumberCard("     ###    #  ###  #    ###       ", temp, Dimension{5, 7}, true, 2));
+				break;
+			case 2:
+				GameObject::Add(new NumberCard("     ###    #  ###    #  ###       ", temp, Dimension{ 5, 7 }, true, 3));
+				break;
+			case 3:
+				GameObject::Add(new NumberCard("     # #  # #  ###    #    #       ", temp, Dimension{ 5, 7 }, true, 4));
+				break;
+			case 4:
+				GameObject::Add(new NumberCard("     ###  #    ###    #  ###       ", temp, Dimension{ 5, 7 }, true, 5));
+				break;
+			}
 		}
 	}
 }
@@ -72,6 +88,8 @@ void GameObject::ProcessInput(bool& exit_flag, InputManager& input)
 {
 	Bullet* bullet = nullptr;
 	BlinkablePlayer* player = nullptr;
+	static NumberCard* select = nullptr;
+	static NumberCard* destination = nullptr;
 
 	if (input.getKey(0x49)) { // press 'i'
 		for (int i = 0; i < max_objs; i++)
@@ -128,13 +146,40 @@ void GameObject::ProcessInput(bool& exit_flag, InputManager& input)
 	}
 	if (input.getMouseButtonDown(0)) {
 		auto mousePos = input.getMousePosition();
+		int x = mousePos.x;
+		int y = mousePos.y;
+		if (x >= 45 || y >= 49) return;
+		NumberCard* obj = dynamic_cast<NumberCard*>(objs[x / 5+y / 7*9]);
+		if (obj == nullptr) return;
+		cout << obj->getType() << endl;
+		select = obj;
+		Borland::GotoXY(115, 0);
+		cout<<select->getPosition().x<<" "<< select->getPosition().y;
+		input.mou
 	}
 	if (input.getMouseButton(0)) {
 		auto mousePos = input.getMousePosition();
 	}
 	if (input.getMouseButtonUp(0)) {
 		auto mousePos = input.getMousePosition();
+		int x = mousePos.x;
+		int y = mousePos.y;
+		if (x >= 45 || y >= 49) return;
+		NumberCard* obj = dynamic_cast<NumberCard*>(objs[x / 5 + y / 7 * 9]);
+		if (obj == nullptr) return;
+		cout << obj->getType() << endl;
+		destination = obj;
+		Borland::GotoXY(115, 2);
+		cout<<destination->getPosition().x << " " << destination->getPosition().y;
 	}
+
+	if (select == nullptr || destination == nullptr)return;
+
+	//if (select->getPosition().x != destination->getPosition().x|| select->getPosition().y != destination->getPosition().y)
+	//{
+	//	select->change(*destination);
+	//}
+
 }
 
 void GameObject::UpdateAll(InputManager& input)
