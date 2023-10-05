@@ -12,10 +12,10 @@ public:
 	int getType()const { return type; }
 	void setType(int _type) { type = _type; }
 	virtual void update(InputManager& input) override;
-	void reTouch(char* shape);
+	void reTouch(const char* shape);
 	void change(NumberCard& target);
 
-	NumberCard& operator=(const NumberCard& other)
+	void operator=(const NumberCard& other)
 	{
 		setShape(other.getShape());
 		setPosition(other.getPosition());

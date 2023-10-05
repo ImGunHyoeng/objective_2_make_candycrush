@@ -30,9 +30,9 @@ void NumberCard::update(InputManager& input)
 
 }
 
-void NumberCard::reTouch(char* shape)
+void NumberCard::reTouch(const char* shape)
 {
-
+	setShape(shape);
 }
 
 void NumberCard::change(NumberCard& target)

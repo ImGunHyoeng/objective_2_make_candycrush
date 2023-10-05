@@ -155,7 +155,7 @@ void GameObject::ProcessInput(bool& exit_flag, InputManager& input)
 		select = obj;
 		Borland::GotoXY(115, 0);
 		cout<<select->getPosition().x<<" "<< select->getPosition().y;
-		input.mou
+		
 	}
 	if (input.getMouseButton(0)) {
 		auto mousePos = input.getMousePosition();
@@ -173,7 +173,38 @@ void GameObject::ProcessInput(bool& exit_flag, InputManager& input)
 		cout<<destination->getPosition().x << " " << destination->getPosition().y;
 	}
 
-	if (select == nullptr || destination == nullptr)return;
+	if (input.getMouseButtonDown(0))
+		return;
+	if()
+	if (input.getMouseButtonUp(0))
+	{
+		Borland::GotoXY(115, 5);
+		cout << "my objective" << endl;
+		NumberCard temp = *destination;
+		cout << destination->getType() << endl;
+		cout << select->getType() << endl;
+
+		destination->setType(select->getType());
+		select->setType(temp.getType());
+		
+
+		cout << destination->getType() << endl;
+		cout << select->getType() << endl;
+
+		if (destination->getType() != select->getType())
+		{
+			temp = *select;
+			select->reTouch(destination->getShape());
+			destination->reTouch(temp.getShape());
+
+		}
+
+			
+		
+
+		destination = nullptr;
+		select = nullptr;
+	}
 
 	//if (select->getPosition().x != destination->getPosition().x|| select->getPosition().y != destination->getPosition().y)
 	//{
