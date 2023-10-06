@@ -22,11 +22,13 @@ int main()
 
 		GameObject::ExamineCollision();
 
-		GameObject::UpdateAll(input);
+		//GameObject::UpdateAll(input);
 		
 		GameObject::DrawAll();
 
 		GameObject::RenderFrame();
+
+		GameObject::UpdateAll(input);
 	}
 
     GameObject::Deinitialize();

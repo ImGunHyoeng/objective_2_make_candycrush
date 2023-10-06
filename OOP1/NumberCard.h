@@ -11,17 +11,33 @@ public:
 	{}
 	int getType()const { return type; }
 	void setType(int _type) { type = _type; }
-	virtual void update(InputManager& input) override;
 	void reTouch(const char* shape);
-	void change(NumberCard& target);
+	void change(int type);
 
-	void operator=(const NumberCard& other)
+	NumberCard& operator=(const NumberCard& other)
 	{
+		if (this == &other)
+			return *this;
+		GameObject::~GameObject();
+		
+		 
 		setShape(other.getShape());
 		setPosition(other.getPosition());
 		setVisible(other.isVisible());
 		type = other.type;
-		
+		return *this;
 	}
+};
+enum class CardType
+{
+	One,
+	Two,
+	Three,
+	Four,
+	Five,
+	Six,
+	Seven,
+	Eight,
+	Nine
 };
 

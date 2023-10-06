@@ -171,45 +171,51 @@ void GameObject::ProcessInput(bool& exit_flag, InputManager& input)
 		destination = obj;
 		Borland::GotoXY(115, 2);
 		cout<<destination->getPosition().x << " " << destination->getPosition().y;
+		
 	}
-
-	if (input.getMouseButtonDown(0))
+	if (!select || !destination)
 		return;
-	if()
+	if (select->getPosition().distance(destination->getPosition())<4.9f || select->getPosition().distance(destination->getPosition())> 7.1f)//한칸의 이동만 처리하기 위함
+	{
+		destination = nullptr;
+		select = nullptr;
+		return;
+	}
 	if (input.getMouseButtonUp(0))
 	{
-		Borland::GotoXY(115, 5);
-		cout << "my objective" << endl;
-		NumberCard temp = *destination;
-		cout << destination->getType() << endl;
-		cout << select->getType() << endl;
+		//Borland::GotoXY(115, 5);
+		//cout << "my objective" << endl;
+		NumberCard *temp = new NumberCard(destination->getShape(),destination->getPosition(),destination->getDimension(), true, destination->getType());
+		//cout << destination->getType() << endl;
+		//cout << select->getType() << endl;
 
 		destination->setType(select->getType());
-		select->setType(temp.getType());
-		
+		select->setType(temp->getType());
+		//
 
-		cout << destination->getType() << endl;
-		cout << select->getType() << endl;
+		//cout << destination->getType() << endl;
+		//cout << select->getType() << endl;
+
+
 
 		if (destination->getType() != select->getType())
 		{
-			temp = *select;
-			select->reTouch(destination->getShape());
-			destination->reTouch(temp.getShape());
+			destination->reTouch(select->getShape());
+			select->reTouch(temp->getShape());
+			//select->draw();
+			//destination->draw();
+			//canvas.render();
 
 		}
 
-			
-		
 
-		destination = nullptr;
+ 		destination = nullptr;
 		select = nullptr;
+		//select->draw();
+		//destination->draw();
+		//canvas.render();
 	}
-
-	//if (select->getPosition().x != destination->getPosition().x|| select->getPosition().y != destination->getPosition().y)
-	//{
-	//	select->change(*destination);
-	//}
+	
 
 }
 
@@ -217,10 +223,12 @@ void GameObject::UpdateAll(InputManager& input)
 {
 	for (int i = 0; i < max_objs; i++)
 	{
-		if (objs[i] == nullptr || objs[i]->isAlive() == false) continue;
-		objs[i]->update(input);
+		if (objs[i]->isVisible() == false)
+		{
+			dynamic_cast<NumberCard*>(objs[i])->change(rand() % 5);
+		}
 	}
-	RemoveDeadObjects();
+	
 }
 
 void GameObject::DrawAll()
@@ -235,29 +243,122 @@ void GameObject::DrawAll()
 void GameObject::RenderFrame()
 {
 	canvas.render();
-	Sleep(10);
+	Sleep(50);
 }
 
 void GameObject::ExamineCollision()
 {
-	for (int i = 0; i < max_objs; i++)
+	CardType x = CardType::One, y = CardType::One;
+	//타입으로 다음것을 찾고 이를 분석해서 해결할 예정
+	//static NumberCard** cardTotal;
+	//for(int i=0;i<max_objs;i++)
+	
+	//	 cardTotal [i] = dynamic_cast<NumberCard*>(objs[i]);
+	for (int i = 0; i < 7; i++)
 	{
-		if (objs[i] == nullptr) continue;
-		if (objs[i]->isAlive() == false) continue;
-		ICollidable* c_i = dynamic_cast<ICollidable*>(objs[i]);
-		if (c_i == nullptr) continue;
-		for (int j = i + 1; j < max_objs && objs[i]->isAlive() == true; j++)
+		for (int j = 0; j < 9; j++)
 		{
-			if (objs[j] == nullptr) continue;
-			if (objs[j]->isAlive() == false) continue;
-			ICollidable* c_j = dynamic_cast<ICollidable*>(objs[j]);
-			if (c_j == nullptr) continue;
-			if (objs[i]->isColliding(objs[j]) == false)  continue;
-			c_j->onCollision(objs[i]);
-			c_i->onCollision(objs[j]);
+			if (i * 9 + j == 62) break;
+			if (dynamic_cast<NumberCard*>(objs[i * 9 + j])->getType() == dynamic_cast<NumberCard*>(objs[i * 9 + j + 1])->getType())
+			{
+				switch (x)
+				{
+				case CardType::One:
+					x = CardType::Two;
+					continue;
+				case CardType::Two:
+					x = CardType::Three;
+					continue;
+				case CardType::Three:
+					x = CardType::Four;
+					continue;
+				case CardType::Four:
+					x = CardType::Five;
+					continue;
+				case CardType::Five:
+					x = CardType::Six;
+					continue;
+				case CardType::Six:
+					x = CardType::Seven;
+					continue;
+				case CardType::Seven:
+					x = CardType::Eight;
+					continue;
+				case CardType::Eight:
+					x = CardType::Nine;
+					continue;
+				}
+			}
+			if (x < CardType::Three)
+			{
+				x = CardType::One;
+				continue;
+			}
+
+			for (int type = 0; type <= (int)x; type++)
+			{
+				dynamic_cast<NumberCard*>(objs[i*9+j-type])->setVisible(false);//is mean pang
+			}
+
+
+
+			x = CardType::One;//원상태로 복귀
+
+
 		}
+		x = CardType::One;
+
+
 	}
-	RemoveDeadObjects();
+
+	for (int i = 0; i < 9; i++)
+	{
+		for (int j = 0; j < 7; j++)
+		{
+			
+			if ( j != 6&&dynamic_cast<NumberCard*>(objs[i+ j*9])->getType() == dynamic_cast<NumberCard*>(objs[i  + (j + 1)*9])->getType())
+				switch (y)
+				{
+				case CardType::One:
+					y = CardType::Two;
+					continue;
+				case CardType::Two:
+					y = CardType::Three;
+					continue;
+				case CardType::Three:
+					y = CardType::Four;
+					continue;
+				case CardType::Four:
+					y = CardType::Five;
+					continue;
+				case CardType::Five:
+					y = CardType::Six;
+					continue;
+				case CardType::Six:
+					y = CardType::Seven;
+					continue;
+				}
+
+			if (y < CardType::Three)
+			{
+				y = CardType::One;
+				continue;
+			}
+
+
+			for (int type = 0; type <= (int)y; type++)
+			{
+				dynamic_cast<NumberCard*>(objs[i + (j-type)*9])->setVisible(false);//is mean pang
+			}
+
+			y = CardType::One;//원상태로 복귀
+
+		}
+		y = CardType::One;
+
+	}
+
+	//RemoveDeadObjects();
 }
 
 void GameObject::RemoveDeadObjects()
